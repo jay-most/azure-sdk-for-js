@@ -18,8 +18,8 @@ import {
   XML_CHARKEY,
   RequiredSerializerOptions
 } from "./interfaces";
-import { MapperTypeNames } from "./serializer";
-import { getOperationRequestInfo } from "./operationHelpers";
+import {MapperTypeNames} from "./serializer";
+import {getOperationRequestInfo} from "./operationHelpers";
 
 const defaultJsonContentTypes = ["application/json", "text/json"];
 const defaultXmlContentTypes = ["application/xml", "application/atom+xml"];
@@ -156,12 +156,14 @@ async function deserializeResponseBody(
   }
 
   const responseSpec = getOperationResponseMap(parsedResponse);
-  const { error, shouldReturnResponse } = handleErrorResponse(
+  const {error, shouldReturnResponse} = handleErrorResponse(
     parsedResponse,
     operationSpec,
     responseSpec
   );
   if (error) {
+    console.log("BBPERROR")
+    console.log(error)
     throw error;
   } else if (shouldReturnResponse) {
     return parsedResponse;
@@ -224,7 +226,7 @@ function handleErrorResponse(
   parsedResponse: FullOperationResponse,
   operationSpec: OperationSpec,
   responseSpec: OperationResponseMap | undefined
-): { error: RestError | null; shouldReturnResponse: boolean } {
+): {error: RestError | null; shouldReturnResponse: boolean} {
   const isSuccessByStatus = 200 <= parsedResponse.status && parsedResponse.status < 300;
   const isExpectedStatusCode: boolean = isOperationSpecEmpty(operationSpec)
     ? isSuccessByStatus
@@ -233,10 +235,10 @@ function handleErrorResponse(
   if (isExpectedStatusCode) {
     if (responseSpec) {
       if (!responseSpec.isError) {
-        return { error: null, shouldReturnResponse: false };
+        return {error: null, shouldReturnResponse: false};
       }
     } else {
-      return { error: null, shouldReturnResponse: false };
+      return {error: null, shouldReturnResponse: false};
     }
   }
 
@@ -257,6 +259,8 @@ function handleErrorResponse(
   // If the item failed but there's no error spec or default spec to deserialize the error,
   // we should fail so we just throw the parsed response
   if (!errorResponseSpec) {
+    console.log("BBP RESPONSE SPEC")
+    console.log(error)
     throw error;
   }
 
@@ -306,10 +310,18 @@ function handleErrorResponse(
       );
     }
   } catch (defaultError) {
+    console.log("BBP ERROR")
+    console.log(defaultError.message)
+    console.log(parsedResponse.bodyAsText)
     error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody - "${parsedResponse.bodyAsText}" for the default response.`;
   }
 
-  return { error, shouldReturnResponse: false };
+  console.log("BBP REST ERROR")
+  console.log(error.message)
+  console.log(parsedResponse.bodyAsText)
+  console.log(parsedResponse.status)
+
+  return {error, shouldReturnResponse: false};
 }
 
 async function parse(

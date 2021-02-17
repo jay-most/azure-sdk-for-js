@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { DigitalTwinsClient, DigitalTwinsUpdateComponentOptionalParams } from "../../src";
-import { authenticate } from "../utils/testAuthentication";
-import { Recorder } from "@azure/test-utils-recorder";
+import {DigitalTwinsClient, DigitalTwinsUpdateComponentOptionalParams} from "../../src";
+import {authenticate} from "../utils/testAuthentication";
+import {Recorder} from "@azure/test-utils-recorder";
 import chai from "chai";
 
 const assert = chai.assert;
@@ -71,13 +71,14 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
   let client: DigitalTwinsClient;
   let recorder: Recorder;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
+    console.log("BBP beforeeach")
     const authentication = await authenticate(this);
     client = authentication.client;
     recorder = authentication.recorder;
   });
 
-  afterEach(async function() {
+  afterEach(async function () {
     await recorder.stop();
   });
 
@@ -112,7 +113,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     await client.upsertDigitalTwin(digitalTwinId, JSON.stringify(temporary_twin));
   }
 
-  it("get component not existing", async function() {
+  it("get component not existing", async function () {
     await setUpModels();
     await createDigitalTwin(DIGITAL_TWIN_ID);
 
@@ -129,7 +130,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     should.equal(errorWasThrown, true, "Error was not thrown");
   });
 
-  it("get component simple", async function() {
+  it("get component simple", async function () {
     await setUpModels();
     await createDigitalTwin(DIGITAL_TWIN_ID);
 
@@ -145,7 +146,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     }
   });
 
-  it("update component replace", async function() {
+  it("update component replace", async function () {
     await setUpModels();
     await createDigitalTwin(DIGITAL_TWIN_ID);
 
@@ -168,7 +169,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     }
   });
 
-  it("update component remove", async function() {
+  it("update component remove", async function () {
     await setUpModels();
     await createDigitalTwin(DIGITAL_TWIN_ID);
 
@@ -189,7 +190,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     }
   });
 
-  it("update component add", async function() {
+  it("update component add", async function () {
     await setUpModels();
     await createDigitalTwin(DIGITAL_TWIN_ID);
 
@@ -212,7 +213,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     }
   });
 
-  it("update component multiple", async function() {
+  it("update component multiple", async function () {
     await setUpModels();
     await createDigitalTwin(DIGITAL_TWIN_ID);
 
@@ -241,7 +242,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     }
   });
 
-  it("update component invalid patch", async function() {
+  it("update component invalid patch", async function () {
     await setUpModels();
     await createDigitalTwin(DIGITAL_TWIN_ID);
 
@@ -265,7 +266,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     should.equal(errorWasThrown, true, "Error was not thrown");
   });
 
-  it("update component conditionally if present", async function() {
+  it("update component conditionally if present", async function () {
     await setUpModels();
     await createDigitalTwin(DIGITAL_TWIN_ID);
 
@@ -292,7 +293,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     }
   });
 
-  it("update component invalid conditions", async function() {
+  it("update component invalid conditions", async function () {
     await setUpModels();
     await createDigitalTwin(DIGITAL_TWIN_ID);
 
@@ -319,7 +320,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     should.equal(errorWasThrown, true, "Error was not thrown");
   });
 
-  it("update component not exisiting", async function() {
+  it("update component not exisiting", async function () {
     await setUpModels();
     await createDigitalTwin(DIGITAL_TWIN_ID);
 
@@ -343,7 +344,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     should.equal(errorWasThrown, true, "Error was not thrown");
   });
 
-  it("publish component telemetry", async function() {
+  it("publish component telemetry", async function () {
     recorder.skip(undefined, "The method creates a unique Id");
 
     await setUpModels();
@@ -364,7 +365,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     }
   });
 
-  it("publish component telemetry with message id", async function() {
+  it("publish component telemetry with message id", async function () {
     recorder.skip(undefined, "The method creates a unique Id");
 
     await setUpModels();
@@ -385,7 +386,7 @@ describe("DigitalTwins Components - read, update and delete operations", () => {
     }
   });
 
-  it("publish component telemetry not exisiting", async function() {
+  it("publish component telemetry not exisiting", async function () {
     recorder.skip(undefined, "The method creates a unique Id");
 
     await setUpModels();

@@ -53,27 +53,11 @@ parameters:
 - name: Matrix
   type: object
   default:
-    Windows Node 8:
-      Pool: azsdk-pool-mms-win-2019-general
-      OSVmImage: MMS2019
-      TestType: "node"
-      NodeTestVersion: "8.x"
-      PublishCodeCoverage: true
-    Linux Node 10:
-      Pool: azsdk-pool-mms-ubuntu-1804-general
-      OSVmImage: MMSUbuntu18.04
-      TestType: "node"
-      NodeTestVersion: "10.x"
     Linux Node 12:
       Pool: azsdk-pool-mms-ubuntu-1804-general
       OSVmImage: MMSUbuntu18.04
       TestType: "node"
       NodeTestVersion: "12.x"
-    MacOS Node 14:
-      Pool: Azure Pipelines
-      OSVmImage: "macOS-10.15"
-      TestType: "node"
-      NodeTestVersion: "14.x"
 
 jobs:
   - job: "IntegrationTest"
@@ -92,7 +76,7 @@ jobs:
       maxParallel: ${{ parameters.MaxParallel }}
       matrix:
         ${{ each matrixEntry in parameters.Matrix }}:
-          ${{ matrixEntry.key }}:         
+          ${{ matrixEntry.key }}:
             # TestResultsFiles
             ${{ if eq(matrixEntry.value.TestType, 'browser' )}}:
               TestResultsFiles: "**/test-results.browser.xml"
@@ -104,23 +88,14 @@ jobs:
             # is specified because the template logic above is not running in this
             # context.
 
-        # Add matrix entry for browser testing
-        ${{ if eq(parameters.TestBrowser, 'true') }}:
-          Windows Browser:
-            Pool: azsdk-pool-mms-win-2019-general
-            OSVmImage: MMS2019
-            TestType: "browser"
-            NodeTestVersion: "$(NodeVersion)"
-            TestResultsFiles: "**/test-results.browser.xml"
-
         # Add matrix entry for sample testing
         ${{ if eq(parameters.TestSamples, 'true') }}:
           Samples Linux Node 10:
             Pool: azsdk-pool-mms-ubuntu-1804-general
             OSVmImage: MMSUbuntu18.04
             TestType: "sample"
-            NodeTestVersion: "10.x"            
-        
+            NodeTestVersion: "10.x"
+
         # Add matrix entry for min-max testing
         ${{ if eq(parameters.TestMinMax, 'true') }}:
           MaxVersion_Node:
@@ -129,14 +104,14 @@ jobs:
             TestType: "node"
             DependencyVersion: max
             NodeTestVersion: "$(NodeVersion)"
-            TestResultsFiles: "**/test-results.xml"            
+            TestResultsFiles: "**/test-results.xml"
           MinVersion_Node:
             Pool: azsdk-pool-mms-ubuntu-1804-general
             OSVmImage: MMSUbuntu18.04
             TestType: "node"
             DependencyVersion: min
             NodeTestVersion: "$(NodeVersion)"
-            TestResultsFiles: "**/test-results.xml"                  
+            TestResultsFiles: "**/test-results.xml"
 
         # Add matrix entry for same dep testing
         ${{ if eq(parameters.TestSame, 'true') }}:
@@ -146,7 +121,7 @@ jobs:
             TestType: "node"
             DependencyVersion: same
             NodeTestVersion: "$(NodeVersion)"
-            TestResultsFiles: "**/test-results.xml"   
+            TestResultsFiles: "**/test-results.xml"
 
         # Add matrix entry for canary testing
         ${{ if eq(parameters.TestCanary, 'true') }}:
@@ -196,7 +171,7 @@ jobs:
           node common/scripts/install-run-rush.js build:test -t "${{parameters.PackageName}}" --verbose -p max
         displayName: "Build test assets"
         condition: and(succeededOrFailed(),eq(variables['DependencyVersion'],''))
-      
+
       - script: |
           npm install
           node index.js --artifact-name "${{parameters.PackageName}}" --version-type $(DependencyVersion) --source-dir "$(Build.SourcesDirectory)" --test-folder "test/public"
